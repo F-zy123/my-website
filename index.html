@@ -59,6 +59,7 @@
  <div class="swiper-slide first-home" data-hash="home">
  <div class="video_bg" id="canvas"></div>
  <canvas id="particleCanvas"></canvas>
+ <div class="brand-logos-bg"></div>
  <div class="p1-gm-info">
  <ul>
  <li class="logo">
@@ -321,6 +322,135 @@
  }
  
  drawParticles();
+ 
+ // 品牌Logo粒子效果
+ (function(){
+ var canvas = document.createElement('canvas');
+ canvas.id = 'logoParticleCanvas';
+ canvas.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;z-index:2;pointer-events:none;';
+ document.querySelector('.first-home').appendChild(canvas);
+ 
+ var ctx = canvas.getContext('2d');
+ var particles = [];
+ var mouse = { x: 0, y: 0 };
+ var imgLoaded = false;
+ 
+ function resize() {
+ canvas.width = window.innerWidth;
+ canvas.height = window.innerHeight;
+ }
+ resize();
+ window.addEventListener('resize', resize);
+ 
+ document.addEventListener('mousemove', function(e){
+ mouse.x = e.clientX;
+ mouse.y = e.clientY;
+ });
+ 
+ // 加载品牌Logo图片并提取文字区域粒子点
+ var logoImg = new Image();
+ logoImg.onload = function() {
+ imgLoaded = true;
+ extractTextParticles(logoImg);
+ };
+ logoImg.src = './img/brand-logos.png';
+ 
+ function extractTextParticles(image) {
+ var tempCanvas = document.createElement('canvas');
+ var tempCtx = tempCanvas.getContext('2d');
+ var scale = 0.6;
+ tempCanvas.width = image.width * scale;
+ tempCanvas.height = image.height * scale;
+ 
+ var centerX = canvas.width / 2;
+ var centerY = canvas.height / 2;
+ var offsetX = centerX - tempCanvas.width / 2;
+ var offsetY = centerY - tempCanvas.height / 2;
+ 
+ tempCtx.drawImage(image, 0, 0, tempCanvas.width, tempCanvas.height);
+ var imgData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+ var data = imgData.data;
+ 
+ var spacing = 8;
+ particles = [];
+ 
+ for(var y = 0; y < tempCanvas.height; y += spacing) {
+ for(var x = 0; x < tempCanvas.width; x += spacing) {
+ var i = (y * tempCanvas.width + x) * 4;
+ var r = data[i];
+ var g = data[i + 1];
+ var b = data[i + 2];
+ var a = data[i + 3];
+ 
+ // 检测非白色像素（文字区域）
+ if(r < 240 || g < 240 || b < 240) {
+ particles.push({
+ x: offsetX + x,
+ y: offsetY + y,
+ baseX: offsetX + x,
+ baseY: offsetY + y,
+ vx: 0,
+ vy: 0,
+ brightness: 1 - (r + g + b) / 765
+ });
+ }
+ }
+ }
+ 
+ animate();
+ }
+ 
+ function animate() {
+ ctx.clearRect(0, 0, canvas.width, canvas.height);
+ 
+ for(var i = 0; i < particles.length; i++) {
+ var p = particles[i];
+ 
+ // 鼠标推开效果
+ var dx = mouse.x - p.x;
+ var dy = mouse.y - p.y;
+ var dist = Math.sqrt(dx*dx + dy*dy);
+ var maxDist = 200;
+ 
+ if(dist < maxDist && dist > 0) {
+ var force = (maxDist - dist) / maxDist * 2;
+ p.x -= dx / dist * force * 3;
+ p.y -= dy / dist * force * 3;
+ } else {
+ p.x += (p.baseX - p.x) * 0.08;
+ p.y += (p.baseY - p.y) * 0.08;
+ }
+ 
+ // 绘制粒子
+ var size = 1.5 + Math.sin(Date.now() * 0.003 + i * 0.1) * 0.5;
+ ctx.beginPath();
+ ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+ ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+ ctx.fill();
+ }
+ 
+ // 绘制连线
+ ctx.lineWidth = 0.5;
+ for(var i = 0; i < particles.length; i++) {
+ for(var j = i + 1; j < particles.length; j++) {
+ var dx = particles[i].x - particles[j].x;
+ var dy = particles[i].y - particles[j].y;
+ var dist = Math.sqrt(dx*dx + dy*dy);
+ 
+ if(dist < 25) {
+ var alpha = (1 - dist / 25) * 0.3;
+ ctx.beginPath();
+ ctx.moveTo(particles[i].x, particles[i].y);
+ ctx.lineTo(particles[j].x, particles[j].y);
+ ctx.strokeStyle = 'rgba(255, 255, 255, ' + alpha + ')';
+ ctx.stroke();
+ }
+ }
+ }
+ 
+ requestAnimationFrame(animate);
+ }
+ })();
  });
  </script>
 </body>

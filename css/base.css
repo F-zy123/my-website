@@ -27,6 +27,7 @@ img { max-width: 100%; display: block; }
 .first-home { background: linear-gradient(135deg, #0a0a0a 0%, #111 50%, #0a0a0a 100%); position: relative; overflow: hidden; }
 .video_bg { position: absolute; inset: 0; background: linear-gradient(135deg, #0a0a0a 0%, #111 50%, #0a0a0a 100%); }
 #particleCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+.brand-logos-bg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 1000px; opacity: 0.15; z-index: 1; pointer-events: none; background-image: url('../img/brand-logos.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 60vh; }
 .p1-gm-info { position: relative; z-index: 10; text-align: center; }
 .p1-gm-info ul { list-style: none; }
 .p1-gm-info .logo img { width: 200px; margin: 0 auto 30px; }
