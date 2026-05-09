@@ -13,6 +13,9 @@ img { max-width: 100%; display: block; }
 /* 头部 */
 .lh-header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; background: transparent; }
 .lh-logo { width: 120px; height: 40px; background-size: contain; background-repeat: no-repeat; background-position: center; }
+.lh-logo-text { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #c9a96e, #d4b87a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+.logo-text { font-size: 64px; font-weight: bold; background: linear-gradient(135deg, #c9a96e, #d4b87a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 20px; letter-spacing: 10px; }
+.tagline { font-size: 18px; color: rgba(255,255,255,0.7); letter-spacing: 2px; }
 .lh-nav { display: flex; gap: 40px; }
 .lh-nav li a { display: flex; flex-direction: column; align-items: center; color: rgba(255,255,255,0.7); transition: all 0.3s; }
 .lh-nav li a span { font-size: 12px; letter-spacing: 2px; margin-bottom: 4px; }
