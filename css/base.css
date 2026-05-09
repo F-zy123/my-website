@@ -14,8 +14,8 @@ img { max-width: 100%; display: block; }
 .lh-header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; background: transparent; }
 .lh-logo { width: 120px; height: 40px; background-size: contain; background-repeat: no-repeat; background-position: center; }
 .lh-logo-text { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #c9a96e, #d4b87a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
-.logo-text { font-size: 64px; font-weight: bold; background: linear-gradient(135deg, #c9a96e, #d4b87a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 20px; letter-spacing: 10px; }
-.tagline { font-size: 18px; color: rgba(255,255,255,0.7); letter-spacing: 2px; }
+.logo-text { font-size: 72px; font-weight: bold; color: #c9a96e; margin-bottom: 25px; letter-spacing: 15px; text-shadow: 0 0 30px rgba(201,169,110,0.5); }
+.tagline { font-size: 20px; color: rgba(255,255,255,0.85); letter-spacing: 3px; margin-top: 20px; }
 .lh-nav { display: flex; gap: 40px; }
 .lh-nav li a { display: flex; flex-direction: column; align-items: center; color: rgba(255,255,255,0.7); transition: all 0.3s; }
 .lh-nav li a span { font-size: 12px; letter-spacing: 2px; margin-bottom: 4px; }
@@ -32,12 +32,12 @@ img { max-width: 100%; display: block; }
 #particleCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
 
 /* 品牌球形轨道效果 */
-.brand-orbit-container { position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; transform: translate(-50%, -50%); z-index: 10; pointer-events: none; }
+.brand-orbit-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
 #brandOrbitCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-.brand-logo-item { position: absolute; width: 80px; height: 50px; display: flex; align-items: center; justify-content: center; pointer-events: auto; transition: transform 0.3s ease; }
-.brand-logo-item img { max-width: 100%; max-height: 100%; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.7; transition: all 0.3s; }
-.brand-logo-item:hover img { opacity: 1; transform: scale(1.1); filter: brightness(0) invert(1) drop-shadow(0 0 15px rgba(255,255,255,0.6)); }
-.p1-gm-info { position: relative; z-index: 10; text-align: center; }
+.brand-logo-item { position: absolute; width: 90px; height: 60px; display: flex; align-items: center; justify-content: center; pointer-events: auto; }
+.brand-logo-item img { max-width: 80px; max-height: 50px; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.75; transition: all 0.3s; }
+.brand-logo-item:hover img { opacity: 1; transform: scale(1.2); filter: brightness(0) invert(1) drop-shadow(0 0 15px rgba(255,255,255,0.6)); }
+.p1-gm-info { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 15; text-align: center; width: 100%; }
 .p1-gm-info ul { list-style: none; }
 .p1-gm-info .logo img { width: 200px; margin: 0 auto 30px; }
 .p1-gm-info .text { font-size: 24px; color: rgba(255,255,255,0.8); }
