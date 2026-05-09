@@ -58,6 +58,7 @@
  <!--plant1-->
  <div class="swiper-slide first-home" data-hash="home">
  <div class="video_bg" id="canvas"></div>
+ <canvas id="particleCanvas"></canvas>
  <div class="p1-gm-info">
  <ul>
  <li class="logo">
@@ -237,5 +238,90 @@
  </div>
  </footer>
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script>
+ // 粒子动态背景效果
+ $(function(){
+ var canvas = document.getElementById('particleCanvas');
+ var ctx = canvas.getContext('2d');
+ var particles = [];
+ var particleCount = 80;
+ var mouse = { x: 0, y: 0 };
+ 
+ function resizeCanvas() {
+ canvas.width = window.innerWidth;
+ canvas.height = window.innerHeight;
+ }
+ resizeCanvas();
+ window.addEventListener('resize', resizeCanvas);
+ 
+ document.addEventListener('mousemove', function(e){
+ mouse.x = e.clientX;
+ mouse.y = e.clientY;
+ });
+ 
+ for(var i = 0; i < particleCount; i++){
+ particles.push({
+ x: Math.random() * canvas.width,
+ y: Math.random() * canvas.height,
+ vx: (Math.random() - 0.5) * 0.5,
+ vy: (Math.random() - 0.5) * 0.5,
+ radius: Math.random() * 2 + 1,
+ color: 'rgba(201, 169, 110, ' + (Math.random() * 0.5 + 0.2) + ')'
+ });
+ }
+ 
+ function drawParticles() {
+ ctx.clearRect(0, 0, canvas.width, canvas.height);
+ 
+ // 绘制粒子
+ for(var i = 0; i < particles.length; i++){
+ var p = particles[i];
+ 
+ // 鼠标交互
+ var dx = mouse.x - p.x;
+ var dy = mouse.y - p.y;
+ var dist = Math.sqrt(dx*dx + dy*dy);
+ if(dist < 150){
+ p.x -= dx * 0.02;
+ p.y -= dy * 0.02;
+ }
+ 
+ // 更新位置
+ p.x += p.vx;
+ p.y += p.vy;
+ 
+ // 边界检测
+ if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+ if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+ 
+ // 绘制粒子点
+ ctx.beginPath();
+ ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+ ctx.fillStyle = p.color;
+ ctx.fill();
+ }
+ 
+ // 绘制连线
+ for(var i = 0; i < particles.length; i++){
+ for(var j = i + 1; j < particles.length; j++){
+ var dx = particles[i].x - particles[j].x;
+ var dy = particles[i].y - particles[j].y;
+ var dist = Math.sqrt(dx*dx + dy*dy);
+ if(dist < 150){
+ ctx.beginPath();
+ ctx.moveTo(particles[i].x, particles[i].y);
+ ctx.lineTo(particles[j].x, particles[j].y);
+ ctx.strokeStyle = 'rgba(201, 169, 110, ' + (1 - dist/150) * 0.2 + ')';
+ ctx.stroke();
+ }
+ }
+ }
+ 
+ requestAnimationFrame(drawParticles);
+ }
+ 
+ drawParticles();
+ });
+ </script>
 </body>
 </html>

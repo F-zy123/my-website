@@ -26,6 +26,7 @@ img { max-width: 100%; display: block; }
 /* 首页第一屏 */
 .first-home { background: linear-gradient(135deg, #0a0a0a 0%, #111 50%, #0a0a0a 100%); position: relative; overflow: hidden; }
 .video_bg { position: absolute; inset: 0; background: linear-gradient(135deg, #0a0a0a 0%, #111 50%, #0a0a0a 100%); }
+#particleCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
 .p1-gm-info { position: relative; z-index: 10; text-align: center; }
 .p1-gm-info ul { list-style: none; }
 .p1-gm-info .logo img { width: 200px; margin: 0 auto 30px; }
