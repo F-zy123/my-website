@@ -59,13 +59,23 @@
  <div class="swiper-slide first-home" data-hash="home">
  <div class="video_bg" id="canvas"></div>
  <canvas id="particleCanvas"></canvas>
+ <div class="brand-orbit-container">
+ <canvas id="brandOrbitCanvas"></canvas>
+ <div class="brand-logo-item" data-index="0"><img src="./images/partner-a.png" alt="品牌A"></div>
+ <div class="brand-logo-item" data-index="1"><img src="./images/partner-b.png" alt="品牌B"></div>
+ <div class="brand-logo-item" data-index="2"><img src="./images/partner-c.png" alt="品牌C"></div>
+ <div class="brand-logo-item" data-index="3"><img src="./images/partner-d.png" alt="品牌D"></div>
+ <div class="brand-logo-item" data-index="4"><img src="./images/partner-e.png" alt="品牌E"></div>
+ <div class="brand-logo-item" data-index="5"><img src="./images/partner-f.png" alt="品牌F"></div>
+ <div class="brand-logo-item" data-index="6"><img src="./images/partner-g.png" alt="品牌G"></div>
+ <div class="brand-logo-item" data-index="7"><img src="./images/partner-h.png" alt="品牌H"></div>
+ </div>
  <div class="p1-gm-info">
  <ul>
  <li class="logo">
  <div class="logo-text">闻雨</div>
  <p class="tagline">致力于为设计师服装品牌创造"新与增"的长效价值</p>
  </li>
- <li class="text">致力于为设计师服装品牌创造"新与增"的长效价值</li>
  </ul>
  </div>
  <a href="javascript:;" class="lh-plant-btn">
@@ -322,7 +332,123 @@
  }
  
  drawParticles();
+ 
+ // ========== 品牌球形浮动交互效果 ==========
+ (function(){
+ var orbitCanvas = document.getElementById('brandOrbitCanvas');
+ var orbitCtx = orbitCanvas.getContext('2d');
+ var mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+ var time = 0;
+ var brandItems = document.querySelectorAll('.brand-logo-item');
+ var brands = [];
+ 
+ function resize() {
+ orbitCanvas.width = window.innerWidth;
+ orbitCanvas.height = window.innerHeight;
+ 
+ // 初始化品牌位置 - 椭圆形分布
+ var radiusX = Math.min(orbitCanvas.width * 0.35, 400);
+ var radiusY = Math.min(orbitCanvas.height * 0.3, 250);
+ var count = brandItems.length;
+ 
+ brandItems.forEach(function(item, i){
+ // 椭圆形角度分布
+ var angle = (Math.PI * 2 / count) * i - Math.PI / 2;
+ brands[i] = {
+ el: item,
+ baseX: Math.cos(angle) * radiusX,
+ baseY: Math.sin(angle) * radiusY,
+ x: Math.cos(angle) * radiusX,
+ y: Math.sin(angle) * radiusY,
+ angle: angle,
+ radiusX: radiusX,
+ radiusY: radiusY
+ };
+ });
+ }
+ 
+ resize();
+ window.addEventListener('resize', resize);
+ 
+ document.addEventListener('mousemove', function(e){
+ mouse.x = e.clientX;
+ mouse.y = e.clientY;
+ });
+ 
+ function animateOrbit() {
+ time += 0.008;
+ orbitCtx.clearRect(0, 0, orbitCanvas.width, orbitCanvas.height);
+ 
+ var centerX = orbitCanvas.width / 2;
+ var centerY = orbitCanvas.height / 2;
+ var count = brands.length;
+ 
+ // 更新每个品牌位置
+ for(var i = 0; i < count; i++){
+ var brand = brands[i];
+ 
+ // 基础位置 - 椭圆轨道
+ var baseX = centerX + brand.baseX;
+ var baseY = centerY + brand.baseY;
+ 
+ // 浮动效果
+ var floatX = Math.sin(time + i * 0.5) * 8;
+ var floatY = Math.cos(time * 0.8 + i * 0.7) * 5;
+ 
+ // 鼠标交互 - 推开效果
+ var dx = mouse.x - baseX;
+ var dy = mouse.y - baseY;
+ var dist = Math.sqrt(dx*dx + dy*dy);
+ var maxDist = 250;
+ 
+ var mousePushX = 0;
+ var mousePushY = 0;
+ if(dist < maxDist && dist > 0){
+ var force = (maxDist - dist) / maxDist;
+ mousePushX = -dx / dist * force * 60;
+ mousePushY = -dy / dist * force * 40;
+ }
+ 
+ // 更新位置
+ brand.x = baseX + floatX + mousePushX;
+ brand.y = baseY + floatY + mousePushY;
+ 
+ // 更新DOM元素位置
+ var itemX = brand.x - 40; // 居中偏移
+ var itemY = brand.y - 25;
+ brand.el.style.left = itemX + 'px';
+ brand.el.style.top = itemY + 'px';
+ 
+ // 绘制连线
+ for(var j = i + 1; j < count; j++){
+ var other = brands[j];
+ var lineDist = Math.sqrt(Math.pow(brand.x - other.x, 2) + Math.pow(brand.y - other.y, 2));
+ if(lineDist < 200){
+ orbitCtx.beginPath();
+ orbitCtx.moveTo(brand.x, brand.y);
+ orbitCtx.lineTo(other.x, other.y);
+ orbitCtx.strokeStyle = 'rgba(255, 255, 255, ' + (1 - lineDist/200) * 0.15 + ')';
+ orbitCtx.lineWidth = 1;
+ orbitCtx.stroke();
+ }
+ }
+ 
+ // 绘制到中心连线
+ var centerDist = Math.sqrt(Math.pow(brand.x - centerX, 2) + Math.pow(brand.y - centerY, 2));
+ if(centerDist < 350){
+ orbitCtx.beginPath();
+ orbitCtx.moveTo(centerX, centerY);
+ orbitCtx.lineTo(brand.x, brand.y);
+ orbitCtx.strokeStyle = 'rgba(201, 169, 110, ' + (1 - centerDist/350) * 0.1 + ')';
+ orbitCtx.lineWidth = 0.5;
+ orbitCtx.stroke();
+ }
+ }
+ 
+ requestAnimationFrame(animateOrbit);
+ }
+ 
+ animateOrbit();
+ })();
  });
  </script>
-</body>
-</html>
